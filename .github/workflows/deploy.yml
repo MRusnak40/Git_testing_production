@@ -1,0 +1,38 @@
+name: Build and Deploy
+
+on:
+  push:
+    branches:
+      - main # Tady necháváme main, protože ti to na ni úspěšně prošlo!
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      # 1) Checkout - stáhne kód do CI prostředí
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 2) Nastavení Node verze
+      - name: Use Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      # 3) Instalace závislostí
+      - name: Install dependencies
+        run: npm install
+
+      # 4) Build projektu
+      - name: Build
+        run: npm run build
+
+      # 5) Nastavení GitHub Pages
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+
+      # 6) Výsledek uploadneme
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./dist
